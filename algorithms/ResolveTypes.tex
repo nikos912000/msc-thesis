@@ -1,0 +1,20 @@
+\begin{algorithmic}[1]
+\Procedure{Resolve Types}{$decl\_vars$, $non\_API\_decl$, $API\_stmts$}
+
+	\ForAll{$var \in decl\_vars$}
+		\If{$var$ is not used in any $API\_stmt \in API\_stmts$}
+			\State $decl\_vars \leftarrow decl\_vars - var$		
+		\EndIf
+	\EndFor
+
+	\ForAll{$node \in$ $non\_API\_decl$}
+		\State $var \leftarrow$ variable declared in $node.subtree$
+		\Comment $var$ stores the name and the type of the variable
+		\If{$var$ is used in $API\_stmt \in API\_stmts$}
+			\State $decl\_vars \leftarrow decl\_vars \cup var$		
+		\EndIf
+	\EndFor
+
+	\Return $decl\_vars$
+\EndProcedure
+\end{algorithmic}

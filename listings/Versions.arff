@@ -1,0 +1,3 @@
+'com.oreilly.android.otweet.layouts.StatusListItem.setStatus','twitter4j.Status.getUser twitter4j.User.getScreenName twitter4j.Status.getText twitter4j.User.getProfileImageURL'
+'com.oreilly.android.otweet.layouts.StatusListItem.setStatus','twitter4j.Status.getUser twitter4j.User.getScreenName twitter4j.Status.getText'
+'com.oreilly.android.otweet.layouts.StatusListItem.setStatus','twitter4j.Status.getUser twitter4j.User.getScreenName twitter4j.Status.getText'

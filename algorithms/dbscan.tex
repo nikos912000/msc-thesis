@@ -1,0 +1,7 @@
+\begin{algorithmic}[1]
+\State Classify points as \textit{core}, \textit{border} or \textit{noise} points
+\State Remove noise points
+\State Connect core points with distance $\leq Eps$ to each other with an edge
+\State Create a cluster for each pair of connected core points
+\State Assign border points to one of the clusters of its associated core points
+\end{algorithmic}

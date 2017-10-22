@@ -1,0 +1,31 @@
+\begin{algorithmic}[1]
+\Procedure{ClassifyStatements}{$tree$, $API\_calls$}
+	\State $API\_stmts \leftarrow 0$
+	\State $non\_API\_stmts \leftarrow 0$
+	\State $non\_API\_decl \leftarrow 0$
+	
+	\ForAll{$node \in tree$}
+	\Comment{Iterate over the $tree$ in document order}
+		\If{$node$ is a $statement$}
+			\If{$node.subtree$ contains an $API\_call \in API\_calls$}
+				\State $API\_stmts \leftarrow API\_stmts \cup node$
+			\Else
+				\State $non\_API\_stmts \leftarrow non\_API\_stmts \cup node$
+				\If{$node$ is a $declaration$}
+					\State $non\_API\_decl \leftarrow non\_API\_decl \cup node$
+				\EndIf
+			\EndIf
+		\ElsIf{$node$ is a $condition$}
+			\If{$node.parent.subtree$ contains an $API\_call \in API\_calls$}
+				\State $API\_stmts \leftarrow API\_stmts \cup node$
+			\EndIf
+		\ElsIf {$node$ is a $control$}
+			\If{$node.subtree$ does not contain any $API\_call \in API\_calls$}
+				\State $non\_API\_stmts \leftarrow non\_API\_stmts \cup node$
+			\EndIf
+		\EndIf
+	\EndFor
+	
+	\Return $API\_stmts$, $non\_API\_stmts$, $non\_API\_decl$
+\EndProcedure
+\end{algorithmic}

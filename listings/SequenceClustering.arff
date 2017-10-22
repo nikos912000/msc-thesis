@@ -1,0 +1,6 @@
+'@com.gsbina.android.adot4j4a.ADOT4J4A.writeToken@','twitter4j.auth.AccessToken.getToken twitter4j.auth.AccessToken.getTokenSecret'
+'^org.jclouds.demo.tweetstore.controller.StoreTweetsController.apply^','twitter4j.Status.getId twitter4j.Status.getText twitter4j.Status.getUser'
+'@jp.senchan.android.wasatter.task.TaskSetOAuthToken.doInBackground@','twitter4j.auth.AccessToken.getToken twitter4j.auth.AccessToken.getTokenSecret twitter4j.TwitterException.printStackTrace'
+'@org.mule.twitter.TwitterConnector.setOauthVerifier@','twitter4j.Twitter.getOAuthAccessToken twitter4j.auth.AccessToken.getToken twitter4j.auth.AccessToken.getTokenSecret'
+'^ru.abishev.wiki.example1.FunctionalDetector.onStatus^','twitter4j.Status.getUser twitter4j.Status.getText twitter4j.Status.getText'
+'^de.bsd.zwitscher.OneTweetActivity.speak^','twitter4j.Status.getUser twitter4j.Status.getText'

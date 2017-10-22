@@ -1,0 +1,15 @@
+<import>import <name><name>twitter4j</name><operator>.</operator><name>User</name></name>;</import>
+
+<class><specifier>public</specifier> class <name>UserCode</name> <block>{
+  <decl_stmt><decl><specifier>private</specifier> <type><name>User</name></type> <name>user</name></decl>;</decl_stmt>
+
+  <constructor><specifier>public</specifier> <name>UserCode</name><parameter_list>(<parameter><decl><type><name>User</name></type> <name>user</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>user</name></name> <operator>=</operator> <name>user</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><type><name>String</name></type> <name>name</name><parameter_list>()</parameter_list> @<block>{@
+@    <return>return <expr><call><name><name>user</name><operator>.</operator><name>getName@
+@</name></name><argument_list>()</argument_list></call></expr>;</return>@
+@  }</block>@</function>
+
+}</block></class>

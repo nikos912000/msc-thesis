@@ -1,0 +1,9 @@
+\begin{algorithmic}[1]
+\Procedure{$k$-medoids}{$k$, $max\_iter$}
+    \State Initialise $k$ medoids using the $k$\verb!++! initialisation technique
+	\Repeat
+		\State Assign each point to its closest medoid's cluster
+		\State Update medoids by computing the mean of each cluster and getting the data point whose distance to the mean is the minimum one
+	\Until{medoids do not change or $max\_iter$ reached}
+\EndProcedure
+\end{algorithmic}

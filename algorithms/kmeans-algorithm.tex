@@ -1,0 +1,10 @@
+\begin{algorithmic}[1]
+\Procedure{k-means}{$k$}
+    \State Initialise $k$ centroids
+	\Repeat
+		\State Compute distances between points and centroids
+		\State Assign each points to its closest centroid's cluster
+		\State Update centroids
+	\Until{centroids change}
+\EndProcedure
+\end{algorithmic}

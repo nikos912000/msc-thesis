@@ -1,0 +1,3 @@
+<block>{
+    <return>return <expr><call><name><name>user</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr>;</return>
+  }</block>

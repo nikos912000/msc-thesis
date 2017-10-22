@@ -1,0 +1,141 @@
+\chapter{Summarisation Specifics}
+\label{chap:summarisation-specifics}
+
+\section{Summarisation Pseudocodes}
+\label{sec:summarisation-pseudocodes}
+
+One of the basic steps of the summarisation algorithm is the one where the statements are classified to API and to non-API ones. In order to decide on whether a statement belongs to the first ones or to the latter ones, the algorithm needs to be fed with the name of the API methods, that are called in the snippet to be summarised. As we see in \Cref{algorithms:statements-classifier}, the \texttt{ClassifyStmts} function then takes the tree of the source code to be summarised, as well as these names, as its input parameters, in order to classify the statements. The process followed is analysed below:
+
+\begin{itemize}
+\item In \textit{Lines 2} and \textit{3} the function initialises the two lists that are going to store the API and the non-API statements, respectively.
+\item In \textit{Line 4} the function iterates over the tree in document order (also called \textit{pre-order traversal}\footnote{\url{https://en.wikipedia.org/wiki/Tree_traversal}}).
+\item \textit{Line 5} checks whether a node\footnote{In this section, we use the term ``node'' to indicate element nodes in the xml file.} is the root of a \textit{statement}, as these are defined by the srcML format (e.g. \texttt{decl\_stmt}, \texttt{return}, etc.).
+\item In \textit{Lines 6} and \textit{7} the function checks whether the nodes that satisfy the condition in \textit{Line 5} contain an API call in their subtree. Based on the latter decision, they are appended to the appropriate list.
+\item In \textit{Line 11} it checks whether a node is the root of a \textit{condition}, as these are once more defined by the srcML format (e.g. \texttt{condition}, \texttt{control}, etc.).
+\item \textit{Line 12} checks whether the parent node of a node that satisfies the condition in \textit{Line 11}, contains an API call. If so, the node is added to the list where the API statements are stored. Justifying this part of the algorithm, we firstly point out that each node that is a root of a condition statement (e.g. \texttt{condition}, \texttt{control}, etc.), has a parent that is a control\footnote{To avoid confusion, here we are talking about decision-making and looping statements (see \url{https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html}), rather than about the \texttt{control} element, used in the srcML format.} statement (e.g. \texttt{if}, \texttt{for}, etc.), in the srcML format. In addition to that, if -the subtree of- a control statement contains an API call, then we should also keep -the subtree of- its condition(s)\footnote{A hidden point here is that the srcML format handles the \texttt{case} statements of a \texttt{switch} statement in a similar manner to \texttt{conditions}, and hence we consider them as conditions, too.} in the summarised code. Based on this, we may classify the condition statements using their associated control statements classification information. Moreover, our decision to exclude the \texttt{else} statement of the condition in \textit{Line 12} stems from the fact that there is no need to add a condition statement into the corresponding list, in case it is a non-API statement, as the first is going to be removed, too, in case its associated control block is removed.
+\item Finally, \textit{Lines 15-17} check whether -the subtree of- a control statement contains an API call, and if not, this is added to the appropriate list. Note that there is no need to add a control statement into the corresponding list, in case it contains an API call, as all the API statements of its subtree are going to be added to the list, as either \textit{statement} or \textit{condition} nodes.
+\end{itemize}
+
+\begin{algorithm}
+\small
+\caption[Statements Classifier]{Statements Classifier}
+\label{algorithms:statements-classifier}
+\input{algorithms/ClassifyStmts.tex}
+\end{algorithm}
+
+\clearpage
+
+\section{Summarised Snippets}
+\label{sec:summarised-snippets}
+
+In this section we are going to show the effect of the summarisation algorithm to the Java snippets it is applied to. Indicative examples are shown for features including the variables type resolution, the literals replacement, as well as the addition of descriptive comments, which are added either in case of empty blocks, or in snippets where variables that are declared in API statements are used in non-API statements (which are removed from the summarised snippet). We also provide an example which mainly shows the removal of any non-API statements.
+\vspace{10pt}
+
+\noindent
+\textsc{A. Variables Type Resolution}
+\vspace{5pt}
+
+The summarisation algorithm is able to resolve the type of -almost\footnote{A limitation of our approach when resolving variables type is that we do not take into account the scope of a variable. Although this may lead to an incorrect type resolution, this occurs in rare cases only.}- any variable used in the snippet, in case this information is available in the original source code file. An example of this feature is shown in \Cref{listings:resolve-types-org,listings:resolve-types-sum}.
+
+\begin{figure}[h]
+\lstinputlisting[language=Java]{listings/ResolveTypesOrg.java}
+\vspace{-10pt}
+\caption[Java snippet with unresolved variables]{Java snippet with unresolved variables.}
+\label{listings:resolve-types-org}
+\end{figure}
+\vspace{-20pt}
+
+\begin{figure}[H]
+\lstinputlisting[language=Java]{listings/ResolveTypesSum.java}
+\vspace{-10pt}
+\caption[Summarised snippet, after type resolution]{Summarised snippet of the source code presented in \Cref{listings:resolve-types-org}, after the type resolution.}
+\label{listings:resolve-types-sum}
+\end{figure}
+\vspace{-20pt}
+
+\clearpage
+
+\noindent
+\textsc{B. Literals Replacement}
+\vspace{5pt}
+
+One of the features of the summarisation algorithm is that it replaces the literals, as these are defined in the srcML format, with their types. This includes numbers, strings or even booleans. For instance, the snippet presented in \Cref{listings:literals-org} is summarised to the one shown in \Cref{listings:literals-sum}.
+
+\begin{figure}[h]
+\lstinputlisting[language=Java]{listings/LiteralsOrg.java}
+\vspace{-10pt}
+\caption[Java snippet, before literals' replacement]{Java snippet, before the literals replacement.}
+\label{listings:literals-org}
+\end{figure}
+
+\vspace{-20pt}
+
+\begin{figure}[h]
+\lstinputlisting[language=Java]{listings/LiteralsSum.java}
+\vspace{-10pt}
+\caption[Summarised snippet, after literals' replacement]{Summarised snippet of the source code in \Cref{listings:literals-org}, after the replacement of literals with their srcML type.}
+\label{listings:literals-sum}
+\end{figure}
+
+\noindent
+\textsc{C. Addition of Descriptive Comments inside Empty Blocks}
+\vspace{5pt}
+
+A feature of the summarisation algorithm that aims to improve the readability of the mined snippets, is the addition of descriptive comments, in case of empty blocks. The idea behind that is analysed in \cite{Borges:2014}, while an example that shows the effect of this feature is presented in \Cref{listings:empty-block-org,listings:empty-block-sum}.
+
+\begin{figure}[h]
+\lstinputlisting[language=Java]{listings/EmptyBlockOrg.java}
+\vspace{-10pt}
+\caption[Java snippet, with an empty block]{Java snippet with an empty block, before adding a descriptive comment.}
+\label{listings:empty-block-org}
+\end{figure}
+
+\vspace{-20pt}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{listings/EmptyBlockSum.java}
+\vspace{-10pt}
+\caption[Summarised snippet, with a descriptive comment inside the empty\protect\\block]{Summarised snippet of the source code presented in \Cref{listings:empty-block-org}, after the addition of a descriptive comment inside the empty block.}
+\label{listings:empty-block-sum}
+\end{figure}
+
+\clearpage
+
+\noindent
+\textsc{D. Addition of Descriptive Comments for Variables Declared in API Statements that are Used Only in non-API Statements}
+\vspace{5pt}
+
+This is a feature that adds a novelty to our summarisation algorithm. It is based on a similar feature introduced by \nolink{\citeauthor{Buse:2012}} in \cite{Buse:2012}. However, in our case, we make use of the API statements, as well as of the non-API statements of the source code to be summarised. That is, we check whether an API statement declares a variable that is then used only in non-API statements (which are removed in the summarised version). If so, we add a descriptive comment for the declared variable. The effect of this feature is shown in \Cref{listings:forward-comment-org,listings:forward-comment-sum}.
+
+\begin{figure}[h]
+\lstinputlisting[language=Java,style=Java]{listings/CommentsOrg.java}
+\vspace{-10pt}
+\caption[Java snippet without descriptive comments]{Java snippet without descriptive comments. The API method calls are highlighted.}
+\label{listings:forward-comment-org}
+\end{figure}
+
+\vspace{-20pt}
+
+\begin{figure}[h]
+\lstinputlisting[language=Java,style=Java]{listings/CommentsSum.java}
+\vspace{-10pt}
+\caption[Summarised snippet with descriptive comments]{Summarised snippet of the source code presented in \Cref{listings:forward-comment-org}, after the addition of descriptive comments. The API method calls are highlighted.}
+\label{listings:forward-comment-sum}
+\end{figure}
+
+
+An indicative example that reveals the efficiency of the summarisation algorithm in case of large snippets is presented in \Cref{listings:without-summariser,listings:with-summariser}.
+
+\begin{figure}[h]
+\lstinputlisting[language=Java,style=Java]{snippets/WithoutSummariser.java}
+\vspace{-10pt}
+\caption[Client code without the summariser]{Client code without the summariser. The API calls are highlighted.}
+\label{listings:without-summariser}
+\end{figure}
+
+\begin{figure}[h]
+\lstinputlisting[language=Java,style=Java]{snippets/WithSummariser.java}
+\vspace{-10pt}
+\caption[Client code with the summariser]{Summarised version of the client code presented in \Cref{listings:without-summariser}. The API calls are highlighted.}
+\label{listings:with-summariser}
+\end{figure}

@@ -1,0 +1,148 @@
+\chapter{Evaluation Specifics}
+\label{chap:evaluation-specifics}
+
+\section{Computing the Snippet-Based Metrics}
+\label{sec:snippet-based-metrics}
+
+The process followed in order to compute the snippet-based metrics, is analysed below:
+
+\begin{enumerate}
+\item For each source code file (mined snippets and examples), we extract a sequence of tokens, using a Java code tokeniser, that has been implemented as a previous work of our team. The Java Tokenizer makes use of the Eclipse JDT, in order to extract a list of tokens from a serialised version of a Java source code. We have proceeded to a few modifications on the existing version of the Tokenizer, in order to be able to tokenise multiple files, and to write the output to a \texttt{.json} file. An example that shows the tokens extracted from a Java source code is presented in \Cref{listings:java-tokenizer-code,listings:java-tokenizer-tokens-org}.
+\item Having extracted a \texttt{.json} file where the tokens of the mined snippets/examples are stored, we proceed to some basic preprocessing; this includes the removal of any symbols (e.g. brackets, semicolons, etc.), as well as of any comments and Javadocs. Moreover, we replace any literals (e.g. Strings, numbers, etc.) with their srcML type, in order to be able to fairly evaluate the summarisation algorithm, which includes this step. The revised list of tokens for the example presented in \Cref{listings:java-tokenizer-code} is shown in \Cref{listings:java-tokenizer-tokens-rev}.
+\item For each snippet, we check whether an example contains the same API calls (it may contain additional ones, but this is not a problem). If so, we use the snippet-based metrics defined in \Cref{sec:evaluation-metrics}. In case multiple examples match to the snippet, with respect to its API calls, we match the snippet to the one that maximises the number of their common tokens.
+\end{enumerate}
+
+\begin{figure}[ht]
+\lstinputlisting[language=Java]{listings/JavaTokenizerCode.java}
+\vspace{-10pt}
+\caption[Java snippet to be tokenised by the Java Tokenizer]{Java snippet to be tokenised by the Java Tokenizer.}
+\label{listings:java-tokenizer-code}
+\end{figure}
+
+\vspace{-10pt}
+
+\begin{figure}[ht]
+\lstinputlisting{listings/JavaTokenizerTokensOrg.txt}
+\vspace{-10pt}
+\caption[Java tokens extracted using the Java Tokenizer]{Java tokens extracted from the Java source code presented in \Cref{listings:java-tokenizer-tokens-org}, using the Java Tokenizer.}
+\label{listings:java-tokenizer-tokens-org}
+\end{figure}
+
+\vspace{-10pt}
+
+\begin{figure}[H]
+\lstinputlisting{listings/JavaTokenizerTokensRev.txt}
+\vspace{-10pt}
+\caption[Revised list of Java tokens]{Revised list of Java tokens for the Java source code presented in \Cref{listings:java-tokenizer-tokens-org}, after the preprocessing step.}
+\label{listings:java-tokenizer-tokens-rev}
+\end{figure}
+
+
+\section{Experiment 1}
+\label{sec:exp1-qualitative}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Exp1Ex1Org.java}
+\vspace{-10pt}
+\caption[Snippet ranked first by the $RemUniqNaivNoSum$ version of the system]{Snippet ranked first by the $RemUniqNaivNoSum$ version of the system.}
+\label{listings:exp1-ex1-org-java}
+\end{figure}
+
+\vspace{-10pt}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Exp1Ex1Sum.java}
+\vspace{-10pt}
+\caption[Snippet ranked first by the $RemUniqNaivSum$ version of the system]{Snippet ranked first by the $RemUniqNaivSum$ version of the system. This snippet is a summary of the one presented in \Cref{listings:exp1-ex1-org-java}.}
+\label{listings:exp1-ex1-sum-java}
+\end{figure}
+
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Exp1Ex2Org.java}
+\vspace{-10pt}
+\caption[Random snippet mined by the $RemUniqNaivNoSum$ version of the system]{Random snippet mined by the $RemUniqNaivNoSum$ version of the system.}
+\label{listings:exp1-ex2-org-java}
+\end{figure}
+
+\vspace{-10pt}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Exp1Ex2Sum.java}
+\vspace{-10pt}
+\caption[Random snippet mined by the $RemUniqNaivSum$ version of the\protect\\system]{Random snippet mined by the $RemUniqNaivSum$ version of the system. This snippet is a summary of the one presented in \Cref{listings:exp1-ex2-org-java}.}
+\label{listings:exp1-ex2-sum-java}
+\end{figure}
+
+\clearpage
+
+\section{Experiment 2}
+\label{sec:exp2-qualitative}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Exp2RemUniqueTopExamples.java}
+\vspace{-10pt}
+\caption[Top 5 snippets mined by the $RemUniqNaivSum$ version of the system]{The top 5 snippets, with respect to their support, mined by the $RemUniqNaivSum$ version of the system.}
+\label{listings:exp2-rem-unique-top-examples}
+\end{figure}
+
+\vspace{-10pt}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Exp2KeepUniqueTopExamples.java}
+\vspace{-10pt}
+\caption[Top 5 snippets mined by the $KeepUniqNaivSum$ version of the system]{The top 5 snippets, with respect to their support, mined by the $KeepUniqNaivSum$ version of the system.}
+\label{listings:exp2-keep-unique-top-examples}
+\end{figure}
+
+\clearpage
+
+\section{Experiment 3}
+\label{sec:exp3-qualitative}
+
+\begin{figure}[!h]
+\ffigbox
+{%
+  \begin{subfloatrow}[2]
+  \ffigbox[\FBwidth]
+    {\caption{}\label{listings:k-medoids-top-sequences}}{\lstinputlisting{listings/KMedoidsTopSequences.txt}}
+  \hspace{1em}%
+  \ffigbox[\FBwidth]
+    {\caption{}\label{listings:HDBSCAN-top-sequences}}{\lstinputlisting{listings/HDBSCANTopSequences.txt}}
+  \end{subfloatrow}}
+  {\caption[Top 10 sequences mined by the $KeepUniqKMedoidsSum$, and the\protect\\$KeepUniqHDBSCANSum$ versions of the system]{The top 10 sequences, with respect to their support, mined (\subref{listings:k-medoids-top-sequences}) by the $KeepUniqKMedoidsSum$, and (\subref{listings:HDBSCAN-top-sequences}) by the $KeepUniqHDBSCANSum$ version of the system, that leverage the $k$-medoids and the HDBSCAN clustering techniques, respectively.}
+\label{fig:clustering-top-sequences}}
+\end{figure}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Top5SnippetsHDBSCAN.java}
+\vspace{-10pt}
+\caption[Top 5 snippets mined by the $KeepUniqHDBSCANSum$ version of the system]{The top 5 snippets, with respect to their support, mined by the $KeepUniqHDBSCANSum$ version of the system.}
+\label{listings:exp3-hdbscan-top-snippets}
+\end{figure}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{snippets/Top5SnippetsKMedoids.java}
+\vspace{-10pt}
+\caption[Top 5 snippets mined by the $KeepUniqKMedoidsSum$ version of the system]{The top 5 snippets, with respect to their support, mined by the $KeepUniqKMedoidsSum$ version of the system.}
+\label{listings:exp3-kmedoids-top-snippets}
+\end{figure}
+
+\clearpage
+
+\section{Experiment 5}
+\label{sec:exp5-qualitative}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java,style=Java]{snippets/WellMatchedHDBSCAN.java}
+\vspace{-10pt}
+\caption[Additional tokens revealed when mining snippets instead of sequences]{A snippet mined by the $KeepUniqHDBSCANSum$ version of the system, that has been matched to a handwritten example. The common tokens between the snippet and the handwritten examples it matches to are highlighted; the sequence-tokens are only coloured, while the additional snippet-tokens are moreover encircled, and show the additional information revealed to the developers when presenting snippets instead of sequences.}
+\label{listings:exp5-well-matched-hdbscan}
+\end{figure}
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java,style=Java]{snippets/NotMatchedHDBSCAN.java}
+\vspace{-10pt}
+\caption[Mined snippet not matched to any handwritten example]{A snippet mined and placed in the second position by the $KeepUniqHDBSCANSum$ version of the system. It has not been matched to any handwritten example, although it is supported by $70$ source code files in the mined dataset. In fact, there is no handwritten example that covers the \texttt{setOauthConsumer} method of the \texttt{Twitter4J} API, which is considered as one of the most popular methods of the API. This shows that our system may be well used in order to augment the documentation of an API with new examples.}
+\label{listings:exp5-not-matched-hdbscan}
+\end{figure}

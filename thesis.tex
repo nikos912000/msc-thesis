@@ -1,0 +1,303 @@
+%%%%
+%% Load the class. Put any options that you want here (see the documentation
+%% for the list of options). The following are samples for each type of
+%% thesis:
+%%
+%% Note: you can also specify any of the following options:
+%%  logo: put a University of Edinburgh logo onto the title page
+%%  frontabs: put the abstract onto the title page
+%%  deptreport: produce a title page that fits into a Computer Science
+%%      departmental cover [not sure if this actually works]
+%%  singlespacing, fullspacing, doublespacing: choose line spacing
+%%  oneside, twoside: specify a one-sided or two-sided thesis
+%%  10pt, 11pt, 12pt: choose a font size
+%%  centrechapter, leftchapter, rightchapter: alignment of chapter headings
+%%  sansheadings, normalheadings: headings and captions in sans-serif
+%%      (default) or in the same font as the rest of the thesis
+%%  [no]listsintoc: put list of figures/tables in table of contents (default:
+%%      not)
+%%  romanprepages, plainprepages: number the preliminary pages with Roman
+%%      numerals (default) or consecutively with the rest of the thesis
+%%  parskip: don't indent paragraphs, put a blank line between instead
+%%  abbrevs: define a list of useful abbreviations (see documentation)
+%%  draft: produce a single-spaced, double-sided thesis with narrow margins
+%%
+
+%% Taught MSc degree
+\documentclass[msc, cs, leftchapter, logo]{infthesis}
+
+% This package is for the bibliography
+\usepackage[numbers, sort]{natbib}
+
+% Avoid widows and orphans
+\usepackage[all]{nowidow}
+
+% This is for the section titles
+\usepackage{titlesec}
+
+% redefine section's font size
+\makeatletter
+\renewcommand\Large{\@setfontsize\Large{16pt}{18}}
+\makeatother
+
+% This is to control the layout of lists
+\usepackage{enumitem}
+
+% This is to avoid font-shape warnings
+\usepackage{fix-cm}
+
+% These packages are for the figures
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{floatrow}
+\floatsetup[subfigure]{heightadjust=object,valign=c}
+
+% figures' path
+\graphicspath{{figures/}}
+
+%Table-related packages
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{hhline}
+
+% caption position on top of the tables
+\floatsetup[table]{capposition=top}
+
+% These packages are for algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\let\oldReturn\Return
+\renewcommand{\Return}{\State\oldReturn}
+
+% fix margin in the tables
+\DeclareFloatVCode{toprule}{%
+  \hrule height\heavyrulewidth\vskip 1ex%
+}
+\DeclareFloatVCode{topprule}{%
+  \hrule height\heavyrulewidth\vskip 1.5ex%
+}
+\DeclareFloatVCode{midrule}{%
+  \vskip 1ex\hrule height\lightrulewidth\vskip 1ex%
+}
+\DeclareFloatVCode{endrule}{%
+  \vskip 1ex\hrule height\heavyrulewidth%
+}
+
+\floatsetup[algorithm]{style=ruled,precode=toprule,midcode=midrule,postcode=endrule}
+
+% This package is for urls
+\usepackage[hyphens]{url}
+\usepackage[colorlinks]{hyperref}
+
+\hypersetup{
+     colorlinks   = true,
+     citecolor    = black,
+     linkcolor    = black,
+     urlcolor     = black
+}
+
+% These packages are for symbols and equations
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+% Has to be loaded after hyperref and amsmath
+\usepackage[nameinlink, noabbrev]{cleveref}
+
+% This package is for colors
+\usepackage[dvipsnames,table]{xcolor}
+
+% This package is for code snippets (inc. highlighting)
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{textcomp}
+
+% For drawing trees
+\usepackage{calc}
+\usetikzlibrary{positioning,shadows,arrows,trees,shapes,fit}
+\usetikzlibrary{trees}
+
+% tick mark
+\def\tempyesmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (.8,.7) -- (.25,.15) -- cycle;} 
+\def\featureyes{\resizebox{\widthof{\tempyesmark}*\ratio{\widthof{x}}{\widthof{\normalsize x}}}{!}{\tempyesmark}}
+
+%highlighting feature for snippets
+\makeatletter
+\newenvironment{btHighlight}[1][]
+{\begingroup\tikzset{bt@Highlight@par/.style={#1}}\begin{lrbox}{\@tempboxa}}
+{\end{lrbox}\bt@HL@box[bt@Highlight@par]{\@tempboxa}\endgroup}
+
+\newcommand\btHL[1][]{%
+  \begin{btHighlight}[#1]\bgroup\aftergroup\bt@HL@endenv%
+}
+\def\bt@HL@endenv{%
+  \end{btHighlight}%   
+  \egroup
+}
+\newcommand{\bt@HL@box}[2][]{%
+  \tikz[#1]{%
+    \pgfpathrectangle{\pgfpoint{1pt}{0pt}}{\pgfpoint{\wd #2}{\ht #2}}%
+    \pgfusepath{use as bounding box}%
+    \node[anchor=base west, fill=yellow!30,outer sep=0pt,inner xsep=1pt, inner ysep=0pt, rounded corners=3pt, minimum height=\ht\strutbox+1pt,#1]{\raisebox{1pt}{\strut}\strut\usebox{#2}};
+  }%
+}
+\makeatother
+
+
+% listings-related commands
+\makeatletter
+  \newcommand\listingsfontsize{\@setfontsize\listingsfontsize{8.75pt}{8.75}}
+\makeatother
+
+% modify the style of existing languages and define new ones
+\lstset{
+  language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  frame=lines,
+  keywordstyle=\color{BlueViolet},
+  commentstyle=\color{darkgray},
+  identifierstyle=\color{black},
+  tabsize = 3,
+  stringstyle=\color{Brown},
+  columns=fullflexible,
+  morekeywords={String, each, and},
+  escapechar=`,
+  basicstyle=\bfseries\listingsfontsize\linespread{1.25}\ttfamily,
+}
+
+\lstdefinestyle{Java}
+{
+  language={Java},
+  moredelim=**[is][\btHL]{~}{~},
+  moredelim=**[is][{\btHL[fill=yellow!30,draw=red,dashed,thin]}]{@}{@},
+}
+
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{black},
+  moredelim=[s][\color{BlueViolet}]{<}{>}, %Comment this line to avoid drawing < and >
+  keywordstyle=\color{BlueViolet},
+  morekeywords={xml,xmlns,version,encoding,type},
+  basicstyle=\listingsfontsize\linespread{1.25}\sffamily
+}
+
+\lstdefinestyle{XML}
+{
+  language={XML},
+  moredelim=**[is][\btHL]{~}{~},
+  moredelim={**[is][{\btHL[fill=yellow!30,draw=red,dashed,thin]}]{@}{@}},
+}
+
+\lstdefinelanguage{APTED}
+{
+  basicstyle=\bfseries\listingsfontsize\linespread{1.25}\ttfamily
+}
+
+\lstdefinestyle{APTED}
+{
+  language={APTED},
+  moredelim={**[is][{\btHL[fill=yellow!30,draw=red,dashed,thin]}]{@}{@}},
+}
+
+\lstdefinelanguage{arff}
+{
+  upquote=true,
+  escapeinside={||}
+}
+
+\lstdefinestyle{arff}
+{
+  language={arff},
+  moredelim=**[is][\btHL]{~}{~},
+  moredelim=**[is][{\btHL[fill=yellow!30,draw=red,dashed,thin]}]{@}{@},
+  moredelim=**[is][{\btHL[fill=red!30,draw=red,dashed,thin]}]{^}{^},
+}
+
+\newcommand*{\nolink}[1]{%
+  \begin{NoHyper}#1\end{NoHyper}%
+}
+
+% This is for the hypotheses
+\newtheorem{hypothesis}{Hypothesis}
+\newtheorem{defn}{Definition} % definition numbers are dependent on theorem numbers
+
+%% Information about the title, etc.
+\title{Summarising How a Software API is Used Using Machine Learning and Natural Language Processing Techniques}
+\author{Nikolaos Katirtzis}
+
+%% Specify the abstract here.
+\abstract{
+During the last years, there has been an ever increasing trend in reusing functionality provided by third-party libraries, most of which are accessible through their \textit{Application Programming Interface} (API). However, several studies so far have pointed out the lack of proper documentation of these APIs, which seems to be a great obstacle for using them. With the purpose of facilitating the use of APIs, several systems exploit the information that is now available in software repositories, in order to mine usage examples that show popular usages of the APIs (\textit{API Usage Mining}). This dissertation introduces a novel approach to the problem of API usage mining, in an attempt to mine snippets that are concise, readable, precise, and that cover several usages of the target API. Upon setting the background needed, and providing an overview of the state-of-the-art systems in this field, we define four main features that a system which performs API usage mining should exhibit. On the basis of these features, we then present our approach to the problem, as well as the actual implementation of the system. Our system leverages powerful clustering techniques, such as the $k$-medoids or the HDBSCAN algorithms, in order to cluster similar usage examples, based on their API call sequences. With the aim of presenting the most representative snippet from each cluster, it also considers the structure of the source code, by making use of a tree edit distance metric. Additionally, it exploits the power of a novel summarisation algorithm, that has been implemented as part of this dissertation, in order to produce concise and readable snippets, which it presents to the users, in an order that indicates their popularity. Finally, we conduct appropriate experiments, with the purpose of evaluating five different hypotheses, using different versions of the system. The results are both interesting and promising, with the key hypothesis of the dissertation being confirmed, and showing moreover that our system successfully confronts the problem described in the current dissertation.
+}
+
+%% Now we start with the actual document.
+\begin{document}
+
+%% First, the preliminary pages
+\begin{preliminary}
+
+%% This creates the title page
+\maketitle
+
+%% Acknowledgements
+\begin{acknowledgements}
+It is a genuine pleasure to express my deep sense of thanks and gratitude to the people that have supported me throughout the elaboration of this dissertation.
+
+First and foremost, I owe a gratitude to my supervisor, Dr. Charles Sutton, for giving me the opportunity to accomplish this dissertation, as well as for his keen interest on me, and on my previous work on source code mining, since our first meeting. His support and continuous optimism concerning this project have been essential during this work.
+
+I would also like to express my gratitude to the PhD candidate from the Aristotle University of Thessaloniki, Mr Themistoklis Diamantopoulos, for the kind co-operation and support throughout this work. Without his valuable assistance, the completion of this project would seem impossible.
+
+I am also grateful to Dr. Jaroslav Fowkes, and to the PhD candidate Mr. Miltiadis Allamanis, for providing me with the datasets used in this work, as well as for their invaluable suggestions.
+
+I also owe a great debt of gratitude to my parents, as well as to my girlfriend Christina, for their understanding and patience throughout this demanding year.
+
+Last but not least, I would like to thank my friends for their support throughout all these years.
+
+\end{acknowledgements}
+
+%% Next we need to have the declaration.
+\standarddeclaration
+
+%% Create the table of contents
+\tableofcontents
+\listoffigures
+\listoftables
+\listofalgorithms
+
+\end{preliminary}
+
+% Include any chapter files
+
+\include{chap1}
+\include{chap2}
+\include{chap3}
+\include{chap4}
+\include{chap5}
+\include{chap6}
+\include{chap7}
+
+% Include any appendices
+\appendix
+\include{appendix1}
+\include{appendix2}
+\include{appendix3}
+
+% Bibliography style
+\bibliographystyle{unsrtnat}
+
+%% If you want the bibliography single-spaced (which is allowed), uncomment
+%% the next line.
+% \singlespace
+
+%% Specifies the bibliography file
+\bibliography{references}
+
+\end{document}

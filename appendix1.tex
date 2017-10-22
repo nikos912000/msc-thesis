@@ -1,0 +1,159 @@
+\chapter{Tools Specifics}
+\label{chap:tools-specifics}
+
+In this appendix we provide indicative examples for the most important tools that have been used in the implementation of our system. This includes the following tools:
+
+\begin{description}
+\item[\texttt{srcml}] This tool converts source code files into the \textit{srcML} format, which is basically an XML representation of the source code's AST.
+\item[\texttt{APTED}] This tool computes the Tree Edit Distance between two Java source code files.
+\item[\texttt{Artistic Style}] This is an automatic formatter for source code files, which supports Java source code files, too.
+\end{description}
+
+\section{\texttt{srcml} Example}
+\label{sec:srcml-example}
+
+In the context of this dissertation, we could characterise the srcml tool as a powerful AST extractor, which is able to parse even uncompilable and incomplete source code files. One of its key characteristics, which differentiates it from other similar tools, is that it preserves the original source code in the srcML format, used to represent the AST of the source code. This is really helpful for tasks such as the source code synthesis one, as it is possible to retrieve the XML elements needed, using XPath\footnote{XPath is a query language for selecting nodes from an XML document.} expressions. The srcml tool is also powerful in the sense of translation speed, parsing approximately $3.000$ files per minute, as mentioned in the tool's website\footnote{\url{http://www.srcml.org/about-srcml.html}}.
+
+An indicative example that shows the transformation of a Java source code file into its srcML format is presented in \Cref{listings:srcml-java} and in \Cref{listings:srcml-xml}. As we can see, the entire source code is preserved in the \texttt{.xml} file, which can then be transformed back to the original Java source code, using the same tool. Note that the subtree that corresponds to the body of the \texttt{name} function is highlighted, and can be extracted using an XPath expression.
+
+\begin{figure}[ht]
+\lstinputlisting[language=Java,style=Java]{listings/srcML.java}
+\vspace{-10pt}
+\caption[Java source code, to be transformed into the srcML format]{An example of a Java source code, to be transformed into the srcML format, using the srcml tool.}
+\label{listings:srcml-java}
+\end{figure}
+
+\begin{figure}[ht]
+\lstinputlisting[language=XML,style=XML]{listings/srcML.xml}
+\vspace{-10pt}
+\caption[AST in the srcML format, extracted using the srcml tool]{AST of the file presented in \Cref{listings:srcml-java}, in the srcML format, extracted using the srcml tool.}
+\label{listings:srcml-xml}
+\end{figure}
+
+A possible AST representation for the highlighted fragment in \Cref{listings:srcml-xml}, which corresponds, as mentioned before, to the body of the \texttt{name} function (which is also highlighted in \Cref{listings:srcml-java}), is illustrated in \Cref{listings:srcml-ast}.
+
+\begin{figure}[ht]
+ \begin{tikzpicture}[
+  font=\sffamily,
+  scale=0.7,
+  every node/.style={top color=white, bottom color=blue!25, 
+  rectangle,rounded corners, minimum size=6mm, draw=blue!75,
+  very thick, drop shadow, align=center,scale=0.7},
+  edge from parent/.style={draw=blue!50,thick},
+  sibling distance=2cm,
+  tlabel/.style={pos=0.4,right=-1pt,font=\footnotesize\color{red!70!black}},
+  level 4/.style={sibling distance=5cm},
+  level 5/.style={sibling distance=3cm},
+]
+\node{$<$block$>$}
+child {node {\textcolor{red}{\textbf{$\lbrace$}}}}
+child {node {$<$return$>$}
+  child {node {\textcolor{red}{\textbf{return}}}}
+  child {node {$<$expr$>$}
+    child {node {$<$call$>$}
+      child {node {$<$name$>$}
+        child {node {$<$name$>$}
+          child {node {\textcolor{red}{\textbf{user}}}
+          }
+        }
+        child {node {$<$operator$>$}
+          child {node {\textcolor{red}{\textbf{.}}}
+          }
+        } 
+        child {node {$<$name$>$}
+          child {node {\textcolor{red}{\textbf{getName}}}
+          }
+        }
+      }
+      child {node {$<$argument\_list$>$}
+        child {node {\textcolor{red}{\textbf{()}}}
+        }
+      }
+    }
+  }
+  child {node {\textcolor{red}{\textbf{;}}}
+  }
+}
+child {node {\textcolor{red}{\textbf{$\rbrace$}}}
+};
+\end{tikzpicture}
+%\vspace{-10pt}
+\caption[Illustration of an AST in the srcML format]{Illustration of the AST of the highlighted fragment of the code presented in the \Cref{listings:srcml-xml}. The text nodes that correspond to source code are coloured red.}
+\label{listings:srcml-ast}
+\end{figure}
+
+
+\section{\texttt{APTED} Example}
+\label{sec:apted}
+
+Another tool used in our implementation is the \texttt{APTED}\footnote{\url{http://tree-edit-distance.dbresearch.uni-salzburg.at/} one, which computes the tree edit distance between two trees. The designers of the tool define the tree edit distance as ``the minimum-cost sequence of node edit operations that transform one tree into another''}. The tool considers three edit operations, namely the \textit{insertion}, \textit{deletion} and \textit{renaming} (also called \textit{substitution} in string edit distances) of a tree node. In \Cref{listings:apted1-java,listings:apted1-xml,listings:apted1-transaction,listings:apted2-java,listings:apted2-xml,listings:apted2-transaction} we present an example of two Java source code files (\Cref{listings:apted1-java,listings:apted2-java}), that are transformed to their srcML format (\Cref{listings:apted1-xml,listings:apted2-xml}), and then to appropriate transactions in the form used by the APTED tool (\Cref{listings:apted1-transaction,listings:apted2-transaction}). As we can see, the transaction in \Cref{listings:apted2-transaction} contains 8 additional nodes, with respect to the one in \Cref{listings:apted2-transaction} (these are highlighted). Hence, the tree edit distance between these two trees, computed by the APTED tool, is 8, as there are 8 addition operations.
+
+\begin{figure}[h]
+\lstinputlisting[language=Java]{listings/APTED1.java}
+\vspace{-10pt}
+\caption[Summarised snippet to be compared with the snippet in \Cref{listings:apted2-java}, using the APTED tool]{Summarised snippet to be compared with the snippet in \Cref{listings:apted2-java} using the APTED tool.}
+\label{listings:apted1-java}
+\end{figure}
+
+\begin{figure}[h]
+\lstinputlisting[language=Java]{listings/APTED2.java}
+\vspace{-10pt}
+\caption[Summarised snippet to be compared with the snippet in \Cref{listings:apted1-java}, using the APTED tool]{Summarised snippet to be compared with the snippet in \Cref{listings:apted1-java}, using the APTED tool.}
+\label{listings:apted2-java}
+\end{figure}
+\vspace{-10pt}
+
+\begin{figure}[h]
+\lstinputlisting[language=XML]{listings/APTED1.xml}
+\vspace{-10pt}
+\caption[srcML format of the file in \Cref{listings:apted1-java}]{AST of the file presented in \Cref{listings:apted1-java}, in the srcML format, extracted using the srcml tool.}
+\label{listings:apted1-xml}
+\end{figure}
+\vspace{-10pt}
+
+\begin{figure}[H]
+\lstinputlisting[language=XML]{listings/APTED2.xml}
+\vspace{-10pt}
+\caption[srcML format of the file in \Cref{listings:apted2-java}]{AST of the file presented in \Cref{listings:apted2-java}, in the srcML format, extracted using the srcML tool.}
+\label{listings:apted2-xml}
+\end{figure}
+
+\clearpage
+
+\begin
+{figure}[h]
+\lstinputlisting[language=APTED,style=APTED]{listings/APTED1Transaction.txt}
+\vspace{-10pt}
+\caption[APTED transaction for the file in \Cref{listings:apted1-xml}]{Transaction in the form used by the APTED tool, for the file presented in \Cref{listings:apted1-xml}.}
+\label{listings:apted1-transaction}
+\end{figure}
+\vspace{-20pt}
+
+\begin{figure}[h]
+\lstinputlisting[language=APTED,style=APTED]{listings/APTED2Transaction.txt}
+\vspace{-10pt}
+\caption[APTED transaction for the file in \Cref{listings:apted2-xml}]{Transaction in the form used by the APTED tool, for the file presented in \Cref{listings:apted2-xml}.}
+\label{listings:apted2-transaction}
+\end{figure}
+\vspace{-30pt}
+
+\section{\texttt{Artistic Style} Example}
+\label{sec:artistic-style}
+
+In order to increase the readability of our system's generated snippets, we make use of the \textit{Artistic Style} formatter. This is a commonly used formatter, that supports several languages, including the Java language. We set its \texttt{style} option to the \texttt{java} one, which is used for Java source code files. The way this tool works is straightforward, and thus we only provide an example in \Cref{listings:astyle-before,listings:astyle-after}, without any further analysis.
+
+\begin{figure}[!h]
+\lstinputlisting[language=Java]{listings/AstyleBefore.java}
+\vspace{-10pt}
+\caption[Snippet before the application of the Artistic Style formatter]{Snippet before the application of the Artistic Style formatter.}
+\label{listings:astyle-before}
+\end{figure}
+\vspace{-20pt}
+
+\begin{figure}[H]
+\lstinputlisting[language=Java]{listings/AstyleAfter.java}
+\vspace{-10pt}
+\caption[Snippet after the application of the Artistic Style formatter]{The snippet presented in \Cref{listings:astyle-before}, after the application of the Artistic Style formatter to it.}
+\label{listings:astyle-after}
+\end{figure}
+\vspace{-30pt}

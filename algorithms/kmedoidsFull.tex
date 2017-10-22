@@ -1,0 +1,15 @@
+\begin{algorithmic}[1]
+\Procedure{$k$-medoids}{$X$,$n\_clusters$,$init$,$max\_iter$}
+	\If{$init$=='k-medoids++'}
+		\State $medoid_ids \leftarrow kplusplus$($X$, $n\_clusters$)
+	\Elsif{$init$=='random'}
+		\State $medoid_ids \leftarrow$ random.choice($n$, $n\_clusters$,$replace$=$False$)
+	\Elsif{$init$ is an array $M$}
+		\State $medoid_ids \leftarrow$ $M$
+	\EndIf
+	\For{it in range($max\_iter$)}
+		\State Assign each point to its closest medoid's cluster
+		\State Update medoids by computing the mean of each cluster and getting the data point whose distance to the mean is the minimum one
+	\EndFor
+\EndProcedure
+\end{algorithmic}

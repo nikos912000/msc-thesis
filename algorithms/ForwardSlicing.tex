@@ -1,0 +1,16 @@
+\begin{algorithmic}[1]
+\Procedure{ClassifyStatements}{$API\_stmts$}
+	\State $API\_vars\_not\_read \leftarrow 0$
+	\ForAll{$stmt \in API\_stmts$}
+		\If{$stmt$ is a $declaration$}
+			\State $var \leftarrow$ variable declared in $stmt.subtree$
+			\Comment $var$ stores the name and the type of the variable
+			\If{$var$ is not used in any following $API\_stmt \in API\_stmts$}
+				\State $API\_vars\_not\_read \leftarrow API\_vars\_not\_read \cup var.name$
+			\EndIf
+		\EndIf
+	\EndFor
+	
+	\Return $API\_vars\_not\_read$
+\EndProcedure
+\end{algorithmic}

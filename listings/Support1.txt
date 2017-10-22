@@ -1,0 +1,2 @@
+twitter4j.Status.getUser
+twitter4j.Status.getText

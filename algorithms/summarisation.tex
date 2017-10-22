@@ -1,0 +1,14 @@
+\begin{algorithmic}[1]
+\Procedure{Summarise}{$tree$, $API\_calls$, $decl\_vars$}
+    \State $tree \leftarrow$ Preprocess($tree$)
+    \State $API\_stmts$, $non\_API\_stmts \leftarrow$ ClassifyStmts($tree$, $API\_calls$)
+	\State $decl\_vars \leftarrow$ GetLocDeclVars($tree$, $decl\_vars$)
+	\State $tree \leftarrow$ RemNonAPIStmts($tree$, $non\_API\_stmts$)
+	\State $decl\_vars \leftarrow$ FilterDeclVars($tree$, $decl\_vars$)
+	\State $API\_decl\_vars \leftarrow$ GetAPIDeclVars($API\_stmts$)
+    \State $API\_vars\_not\_read \leftarrow$ CheckAPIDeclVarsRead($API\_decl\_vars$, $API\_stmts$)
+	\State Add a declaration statement for each $var \in decl\_vars$ in $tree$
+    \State Add a descriptive comment for each $var \in API\_vars\_not\_read$ in $tree$
+    \State Add descriptive comments for empty blocks in $tree$
+\EndProcedure
+\end{algorithmic}

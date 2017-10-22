@@ -1,0 +1,8 @@
+\begin{algorithmic}[1]
+\State Compute the \textit{mutual reachability distance} between all data points
+\State Create the \textit{Mutual Reachability Graph} (MRG), a weighted graph with the data points as vertices, and an edge between any two points with weight equal to the mutual reachability distance of those points
+\State Compute the \textit{Minimum Spanning Tree} (MST) of the MRG via \textit{Prim}'s algorithm
+\State Convert the MST into an hierarchy of connected components
+\State Condense the MST using the $min\_cluster\_size$ parameter
+\State Compute the \textit{stability} of each cluster and extract a flat, non-overlapping partition, that maximises the sum of these stabilities.
+\end{algorithmic}

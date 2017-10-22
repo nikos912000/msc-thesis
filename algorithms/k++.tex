@@ -1,0 +1,9 @@
+\begin{algorithmic}[1]
+\Procedure{$k$\texttt{++}}{$k$}
+    \State Initialise the first medoid randomly
+	\Repeat
+		\State Create a distance matrix $D$ which stores, for each data point, its distance from its closest medoid
+		\State Choose the data point $i$ as the next medoid, uniformly, at random, with probability $\frac{D(i)}{\sum_{i \in data} D(i)}$
+	\Until{$k$ medoids have been chosen}
+\EndProcedure
+\end{algorithmic}

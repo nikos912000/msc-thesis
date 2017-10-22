@@ -1,0 +1,5 @@
+twitter4j.Paging.<init>
+twitter4j.Paging.sinceId
+twitter4j.Paging.setCount
+@twitter4j.Status.getUser@
+@twitter4j.Status.getText@
