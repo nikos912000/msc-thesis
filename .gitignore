@@ -1,7 +1,14 @@
 *.aux
 *.bbl
 *.blg
-.idea/
 *.log
 *.synctex.gz
 .DS_Store
+eushield-normal.pdf
+eushield.sty
+infthesis.cls
+*.loa
+*.lof
+*.lot
+*.out
+*.toc
